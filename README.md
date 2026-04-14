@@ -1,41 +1,48 @@
-# AEEN — Note de version v1.0.1
+# AEEN — Note de version v1.0.8
 
-**Date :** 13 avril 2026
-**APK :** `AEEN_v1.0.1.apk`
+**Date :** 14 avril 2026
+**APK :** `AEEN_v1.0.8.apk`
+**Objet :** Corrections suite au retour de débogage ind. 03
 
-## Nouveautés depuis la v1.0.0
+---
 
-### Rapports Essais en Charge — Multi-moteurs ✅
-- Possibilité de saisir plusieurs groupes électrogènes dans un même rapport EC
-- Tableau de sélection des moteurs sous l'onglet Technique (auto-rempli depuis la base contrat)
-- Bouton "Nouveau moteur" pour ajouter un moteur absent de la base
-- Combo de sélection moteur dans Observations et Données EC
-- Propagation automatique des champs communs (Contrat, Client, Temps de travail, Signatures) sur tous les moteurs du lot
-- Génération d'un PDF par moteur, envoi groupé par mail (ACTION_SEND_MULTIPLE)
-- Garde-fou : sections de saisie désactivées tant qu'aucun moteur n'a été ajouté
+## Corrections apportées
 
-### Signature et finalisation
-- Pré-remplissage du nom signataire technicien depuis le champ "Technicien" du contrat
-- Overlay "Traitement en cours..." pendant la génération PDF (plus de doute sur l'état)
-- Boutons désactivés pendant le traitement pour éviter les double-clics
+### Écran d'accueil
+- Image de fond remplacée par une version haute définition (2304×1440, ratio natif de la tablette)
+- Affichage sans déformation ni étirement, couvre tout l'écran
 
-### Temps de travail
-- "Mise en automatique de la centrale" passe par défaut à **Oui**
-- Tous les champs heure (Arrivée, Départ, Travail matin/aprèm, Voyage matin/aprèm) utilisent un sélecteur d'heure Material3 au format `HH:mm`
+### Maintenance Électrique — Batteries chargeurs démarrage
+- Ajout de la ligne « Date / État des cosses - serrage n°2 » qui était manquante à l'écran
+- Les deux batteries disposent désormais des 4 lignes de contrôle attendues
 
-### Synchronisation FTP automatique
-- Envoi automatique des rapports finalisés vers le FTP dès que la connexion réseau est disponible
-- Reprise automatique de l'envoi quand la connexion réseau revient (callback réseau enregistré au démarrage de l'app)
-- Plus besoin de cliquer "Synchroniser" manuellement après une finalisation
+### Maintenance Électrique — Automatisme
+- L'item « Noter type d'automatisme » dispose maintenant d'un champ de saisie texte libre dans la colonne Valeur
 
-## ⚠️ Correction en cours
+### Mise en auto et temps de travail
+- Cases Durée / V / Hz / A agrandies et uniformisées (le libellé « Durée » ne se casse plus sur deux lignes)
 
-### Génération PDF multi-pages
-Le rendu PDF en mode paysage A4 fonctionne correctement pour la **page 1** (en-tête + checklist 2 colonnes), mais les pages 2 et 3 peuvent apparaître blanches lorsque le contenu déborde sur plusieurs pages. Une correction est en cours sur la pagination de la WebView Android (problème de re-paint de Chromium au-delà du viewport initial). Le contenu des pages suivantes est bien présent en base de données, mais n'est pas dessiné dans le PDF.
+### Rapport travaux
+- L'onglet « Mise en auto et temps de travail » est renommé « Mise en auto » dans le menu de gauche pour ce type de rapport
+- Les zones de saisie « Travail » et « Voyage » ont été retirées ; seule la question « Mise en automatique de la centrale » reste affichée
 
-**Impact terrain :** rapports d'une seule page = OK. Rapports multi-pages = page 1 lisible, pages suivantes vides. Les données ne sont pas perdues, c'est purement un problème de rendu visuel.
+### Signature technicien — Compteur horaire
+- Le bouton « Sauver » de la signature technicien est désormais grisé tant que le compteur horaire n'est pas renseigné
+- Un message rouge « Compteur horaire obligatoire (onglet Contrat) » apparaît sous le bouton
+- Le client ne peut plus finaliser un rapport sans avoir renseigné le compteur
 
-**Workaround temporaire :** la version JSON exportée sur le FTP contient l'intégralité des données.
+### Messages d'erreur FTP
+- Les erreurs de connexion FTP sont désormais traduites en français avec un message clair :
+  - « Authentification FTP échouée — vérifier User et mot de passe »
+  - « Serveur FTP introuvable — vérifier l'adresse »
+  - « Délai dépassé — serveur injoignable, vérifier le Wi-Fi »
+  - « Connexion refusée par le serveur (port 22 fermé ?) »
+  - « Permission refusée sur le serveur »
+  - « Fichier ou dossier introuvable sur le serveur »
+- Remplace l'ancien message générique « Echec connexion FTP »
+
+### Écran Paramètre
+- Contenu rendu défilable pour éviter que certains éléments ne soient cachés en bas d'écran
 
 ---
 
@@ -48,7 +55,9 @@ Le rendu PDF en mode paysage A4 fonctionne correctement pour la **page 1** (en-t
 ## Installation
 
 ```bash
-adb install -r AEEN_v1.0.1.apk
+adb install -r AEEN_v1.0.8.apk
 ```
 
-ou via le fichier APK directement sur la tablette.
+ou en copiant le fichier APK sur la tablette et en l'ouvrant depuis l'explorateur de fichiers.
+
+> **Important :** à la première ouverture après installation, si les paramètres FTP apparaissent vides, aller dans *Paramètre → Saisir un code → 1234 → Information FTP* et saisir à nouveau l'adresse, le user et le mot de passe, puis valider. Ensuite lancer une Synchronisation pour récupérer les clients et moteurs.
